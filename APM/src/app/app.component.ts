@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     <h1>
        {{pageTitle}}!!
     </h1>
-    <div>my first component</div>
+    <pm-products></pm-products>
   </div>
   `
 })
