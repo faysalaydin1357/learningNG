@@ -4,7 +4,7 @@ import {ProductService} from "./product.service";
 
 
 @Component({
-  selector: 'pm-products',
+  //selector: 'pm-products', not needed we do routing
   templateUrl:'./product-list.component.html',
   styleUrls:['./product-list.component.css']
 
@@ -18,6 +18,11 @@ export class ProductListComponent implements OnInit{
   imageWidth: number = 50;
   imageMargin: number =2;
   showImage: boolean =false;
+
+  filteredProducts: IProduct[];
+  products: IProduct[];
+  errorMessage: string;
+
   private _listFilter: string ='cart';
 
   get listFilter(): string {
@@ -28,8 +33,6 @@ export class ProductListComponent implements OnInit{
     this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
   }
 
-  filteredProducts: IProduct[];
-  products: IProduct[];
 
   constructor(private productService:ProductService){
     //this._productService = productService;
@@ -53,8 +56,14 @@ export class ProductListComponent implements OnInit{
   ngOnInit(): void {
     //great place to get http data
     console.log('I am in OnInit');
-    this.products= this.productService.getProducts();
-    this.filteredProducts = this.products;
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products
+        this.filteredProducts = this.products;
+      },
+      error: err => this.errorMessage = err
+    });
+
     //this.listFilter = 'cart';
   }
 
